@@ -1,1 +1,1 @@
-# atm-machin
+# atm-machine
