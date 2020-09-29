@@ -7,6 +7,8 @@ import org.design.atm.model.ATMOperation
 import org.design.atm.model.UserSession
 import spock.lang.Specification
 
+import java.util.stream.IntStream
+
 class ATMFacadeOperationsSpec extends Specification {
 
     def "ATM Facade Service - Check Balance"() {
@@ -282,7 +284,7 @@ class ATMFacadeOperationsSpec extends Specification {
         InputStream sysInBackup = System.in // backup System.in to restore it later
         ByteArrayInputStream inn = new ByteArrayInputStream("5 1".getBytes())
         System.setIn(inn)
-        def atmFacade = ATMFacade.withCashDispenser(CashDispenser.withCapacity(2));
+        def atmFacade = ATMFacade.withCashDispenser(CashDispenser.withCapacity(2, IntStream.of(0, 0, 0, 1, 1).toArray()));
 
         when:
         def userSession = UserSession.init(userAccount, true)
