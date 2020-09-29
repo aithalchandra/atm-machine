@@ -65,7 +65,8 @@ class ATMFacadeOperationsSpec extends Specification {
                 "3 - \$1000\n" +
                 "4 - \$2000\n" +
                 "5 - \$5000\n" +
-                "6 - Cancel transaction\n" +
+                "6 - Custom Amount\n" +
+                "7 - Cancel transaction\n" +
                 "\n" +
                 "Choose a withdrawal amount: \n" +
                 "Your cash has been dispensed. Please take your cash now.\n"
@@ -153,7 +154,7 @@ class ATMFacadeOperationsSpec extends Specification {
     def "ATM Facade Service - Withdrawal Funds/Cancelling"() {
         given: "User press 6 for cancellation"
         InputStream sysInBackup = System.in // backup System.in to restore it later
-        ByteArrayInputStream inn = new ByteArrayInputStream("6".getBytes())
+        ByteArrayInputStream inn = new ByteArrayInputStream("7".getBytes())
         System.setIn(inn)
         def atmFacade = ATMFacade.withDefaults();
 
@@ -179,7 +180,8 @@ class ATMFacadeOperationsSpec extends Specification {
                 "3 - \$1000\n" +
                 "4 - \$2000\n" +
                 "5 - \$5000\n" +
-                "6 - Cancel transaction\n\n" +
+                "6 - Custom Amount\n" +
+                "7 - Cancel transaction\n\n" +
                 "Choose a withdrawal amount: \n" +
                 "Cancelling transaction...\n"
     }
@@ -213,7 +215,8 @@ class ATMFacadeOperationsSpec extends Specification {
                 "3 - \$1000\n" +
                 "4 - \$2000\n" +
                 "5 - \$5000\n" +
-                "6 - Cancel transaction\n\n" +
+                "6 - Custom Amount\n" +
+                "7 - Cancel transaction\n\n" +
                 "Choose a withdrawal amount: \n" +
                 "Invalid selection. Try again. \n" +
                 "Withdrawal menu:\n" +
@@ -222,7 +225,8 @@ class ATMFacadeOperationsSpec extends Specification {
                 "3 - \$1000\n" +
                 "4 - \$2000\n" +
                 "5 - \$5000\n" +
-                "6 - Cancel transaction\n\n" +
+                "6 - Custom Amount\n" +
+                "7 - Cancel transaction\n\n" +
                 "Choose a withdrawal amount: \n" +
                 "Your cash has been dispensed. Please take your cash now.\n"
     }
@@ -256,7 +260,8 @@ class ATMFacadeOperationsSpec extends Specification {
                 "3 - \$1000\n" +
                 "4 - \$2000\n" +
                 "5 - \$5000\n" +
-                "6 - Cancel transaction\n\n" +
+                "6 - Custom Amount\n" +
+                "7 - Cancel transaction\n\n" +
                 "Choose a withdrawal amount: \n" +
                 "Insufficient funds in your account.\n\n" +
                 "Please choose a smaller amount.\n\n" +
@@ -266,7 +271,8 @@ class ATMFacadeOperationsSpec extends Specification {
                 "3 - \$1000\n" +
                 "4 - \$2000\n" +
                 "5 - \$5000\n" +
-                "6 - Cancel transaction\n\n" +
+                "6 - Custom Amount\n" +
+                "7 - Cancel transaction\n\n" +
                 "Choose a withdrawal amount: \n" +
                 "Your cash has been dispensed. Please take your cash now.\n"
     }
@@ -300,7 +306,8 @@ class ATMFacadeOperationsSpec extends Specification {
                 "3 - \$1000\n" +
                 "4 - \$2000\n" +
                 "5 - \$5000\n" +
-                "6 - Cancel transaction\n\n" +
+                "6 - Custom Amount\n" +
+                "7 - Cancel transaction\n\n" +
                 "Choose a withdrawal amount: \n" +
                 "Insufficient cash available in the ATM.\n\n" +
                 "Please choose a smaller amount.\n\n" +
@@ -310,7 +317,53 @@ class ATMFacadeOperationsSpec extends Specification {
                 "3 - \$1000\n" +
                 "4 - \$2000\n" +
                 "5 - \$5000\n" +
-                "6 - Cancel transaction\n\n" +
+                "6 - Custom Amount\n" +
+                "7 - Cancel transaction\n\n" +
+                "Choose a withdrawal amount: \n" +
+                "Your cash has been dispensed. Please take your cash now.\n"
+    }
+
+    def "ATM Facade Service - Withdrawal Funds- Notes withdrawal Limit Exceeded"() {
+        given:
+        InputStream sysInBackup = System.in // backup System.in to restore it later
+        ByteArrayInputStream inn = new ByteArrayInputStream("6 45000 6 500".getBytes())
+        System.setIn(inn)
+        def atmFacade = ATMFacade.withDefaults()
+
+        when:
+        def userSession = UserSession.init(userAccount, true)
+        def buffer = new ByteArrayOutputStream()
+        System.out = new PrintStream(buffer)
+
+        and:
+        atmFacade.doTransaction(ATMOperation.WITHDRAWAL, userSession);
+
+        then:
+        buffer.toString() == consoleMessage
+
+        cleanup:
+        System.setIn(sysInBackup);
+
+        where:
+        userAccount || consoleMessage
+        11111       || "\nWithdrawal menu:\n" +
+                "1 - \$100\n" +
+                "2 - \$500\n" +
+                "3 - \$1000\n" +
+                "4 - \$2000\n" +
+                "5 - \$5000\n" +
+                "6 - Custom Amount\n" +
+                "7 - Cancel transaction\n\n" +
+                "Choose a withdrawal amount: \n" +
+                "Max allowed cash withdrawal notes limit 400. Please try again with smaller amount.\n" +
+                "Withdrawal menu:\n" +
+                "1 - \$100\n" +
+                "2 - \$500\n" +
+                "3 - \$1000\n" +
+                "4 - \$2000\n" +
+                "5 - \$5000\n" +
+                "6 - Custom Amount\n" +
+                "7 - Cancel transaction\n\n" +
                 "Choose a withdrawal amount: \n" +
                 "Your cash has been dispensed. Please take your cash now.\n"
     }

@@ -14,6 +14,7 @@ public class CashDispenser {
 
     private static final int MIN_CAPACITY = 1;
     private static final int MAX_CAPACITY = 10000;
+    private static final int CASH_NOTES_LIMIT = 40;
 
     private CashDispenser(int count) {
         this.count = count;
@@ -32,6 +33,14 @@ public class CashDispenser {
         log.info("Cash dispensed of Amount:{}", amount);
         int notesRequired = amount / 100; // amount of notes required
         count -= notesRequired; // update the count of notes
+    }
+
+    public boolean isAllowedNotesLimit(int amount) {
+        int notesRequired = amount / 100; // amount of notes required
+        if(notesRequired > CASH_NOTES_LIMIT) {
+            return false;
+        }
+        return true;
     }
 
     public boolean isSufficientCashAvailable(int amount) {

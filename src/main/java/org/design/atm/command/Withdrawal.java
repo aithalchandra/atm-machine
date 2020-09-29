@@ -6,7 +6,7 @@ import org.design.atm.component.view.ATMScreen;
 @Slf4j
 public class Withdrawal extends TransactionExecutor {
     // constant corresponding menu option to cancel
-    private final static int CANCELED = 6;
+    private final static int CANCELED = 7;
 
     @Override
     public void execute() {
@@ -45,13 +45,13 @@ public class Withdrawal extends TransactionExecutor {
     }
 
     private int showMenuOfAmounts() {
-        int userChoice = 0;
+        int inputAmount = 0;
 
         ATMScreen screen = getScreen();
 
         int[] amounts = {0, 100, 500, 1000, 2000, 5000};
 
-        while (userChoice == 0) {
+        while (inputAmount == 0) {
             // display the menu
             screen.showMessageLine("\nWithdrawal menu:");
             screen.showMessageLine("1 - $100");
@@ -59,7 +59,8 @@ public class Withdrawal extends TransactionExecutor {
             screen.showMessageLine("3 - $1000");
             screen.showMessageLine("4 - $2000");
             screen.showMessageLine("5 - $5000");
-            screen.showMessageLine("6 - Cancel transaction");
+            screen.showMessageLine("6 - Custom Amount");
+            screen.showMessageLine("7 - Cancel transaction");
             screen.showMessage("\nChoose a withdrawal amount: ");
 
             int input = this.getKeypad().getInput();
@@ -70,15 +71,23 @@ public class Withdrawal extends TransactionExecutor {
                 case 3:
                 case 4:
                 case 5:
-                    userChoice = amounts[input];
+                    inputAmount = amounts[input];
+                    break;
+                case 6:
+                    int amount = this.getKeypad().getInput();
+                    if(this.getCashDispenser().isAllowedNotesLimit(amount)) {
+                        inputAmount = amount;
+                    } else {
+                        screen.showMessage("\nMax allowed cash withdrawal notes limit 400. Please try again with smaller amount.");
+                    }
                     break;
                 case CANCELED:
-                    userChoice = CANCELED;
+                    inputAmount = CANCELED;
                     break;
                 default:
                     screen.showMessage("\nInvalid selection. Try again. ");
             }
         }
-        return userChoice;
+        return inputAmount;
     }
 }
