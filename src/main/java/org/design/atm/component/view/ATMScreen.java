@@ -38,7 +38,7 @@ public class ATMScreen {
 	}
 	
 	public String welcomeScreen() {
-		showMessageLine("\nWelcome ! Enter Your name");
+		showMessageLine("\nWelcome to ATM ! Enter Your name");
 		return keypad.getAny();
 	}
 }

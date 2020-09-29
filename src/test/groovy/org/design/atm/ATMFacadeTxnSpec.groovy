@@ -40,8 +40,8 @@ class ATMFacadeTxnSpec extends Specification {
                 "3 - \$1000\n" +
                 "4 - \$2000\n" +
                 "5 - \$5000\n" +
-                "6 - Cancel transaction\n" +
-                "\n" +
+                "6 - Custom Amount\n" +
+                "7 - Cancel transaction\n\n" +
                 "Choose a withdrawal amount: \n" +
                 "Your cash has been dispensed. Please take your cash now.\n"
         ATMOperation.BALANCE_INQUIRY || 11111       || "\n" +
